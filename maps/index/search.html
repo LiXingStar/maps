@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+		<script src="js/jquery3.2.1.min.js"></script>
+		<script src="js/rem.js"></script>
+		<title>search</title>
+		<style>
+			*{
+				padding:0;
+				margin: 0;
+			}
+			html,body{
+				width:100%;
+				height:100%;
+				background: #333;
+			}
+			.searchBox{
+				width:100%;
+				height:1rem;
+
+			}
+			.searchBox img{
+				display: block;
+				width: 0.4rem;
+				float: left;
+				margin-top:0.3rem;
+				margin-left:0.3rem;
+			}
+			.searchBox input{
+				width:70%;
+				height:0.5rem;
+				margin-top: 0.25rem;
+				margin-left: 0.2rem;
+				border:none;
+				background: rgba(0,0,0,0);
+				float:left;
+				border-right: 0.01rem solid #999;
+				padding-left: 0.2rem;
+				box-sizing: border-box;
+				font-size: 0.3rem;
+				color: #fff;
+				
+			}
+			-webkit-input-placeholder{
+				font-size: 0.3rem;
+				color: #f0f0f0;
+			}
+			.searchBox .none{
+				text-decoration: none;
+				display: block;
+				width:0.6rem;
+				height:0.6rem;
+				margin-top: 0.2rem;
+				margin-right: 0.3rem;
+				float: right;
+				color: #2DCB70;
+				font-size: 0.3rem;
+				text-align: center;
+				line-height: 0.6rem;
+			}
+			.cate{
+				width:100%;
+				margin-top:0.2rem;
+				border-top:0.01rem solid #f0f0f0;
+				margin-bottom: 0.25rem;
+			}
+			.cate .list{
+				width:25%;
+				height:1.6rem;
+				float: left;
+				border-right:0.01rem solid #f0f0f0;
+				border-bottom: 0.01rem solid #f0f0f0;
+				padding:0.2rem;
+				box-sizing: border-box;
+				
+			}
+			.cate .list:nth-child(4){
+				border-color: right:none;
+			}
+			.cate .list:nth-child(8){
+				border-color: right:none;
+			}
+			.cate .list img{
+				display: block;
+				width:0.8rem;
+				height:0.8rem;
+				margin-left: 0.3rem;
+			}
+			.cate .list span{
+				display: block;
+				font-size: 0.28rem;
+				color:#999;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="searchBox">
+			<img src="img/search.png" alt="" />
+			<input type="text" placeholder="搜索附近"/>
+			<a href="index.html" class="none">取消</a>
+		</div>
+		<div class="cate">
+			<div class="list">
+				<img src="img/1.png" alt="" />
+				<span>KTV</span>
+			</div>
+			<div class="list">
+				<img src="img/2.png" alt="" />
+				<span>超市</span>
+			</div>
+			<div class="list">
+				<img src="img/3.png" alt="" />
+				<span>电影</span>
+			</div>
+			<div class="list">
+				<img src="img/4.png" alt="" />
+				<span>商场</span>
+			</div>
+			<div class="list">
+				<img src="img/5.png" alt="" />
+				<span>健身</span>
+			</div>
+			<div class="list">
+				<img src="img/6.png" alt="" />
+				<span>美食</span>
+			</div>
+			<div class="list">
+				<img src="img/7.png" alt="" />
+				<span>医院</span>
+			</div>
+			<div class="list">
+				<img src="img/8.png" alt="" />
+				<span>银行</span>
+			</div>
+		</div>
+	</body>
+</html>

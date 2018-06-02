@@ -1,0 +1,52 @@
+<!doctype html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport"  
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">  
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">  
+    <title>陀螺仪获取数据</title>  
+</head>  
+<body>  
+alpha（移动设备水平放置时，绕z轴旋转的角度，数值为0度到360度）:<span id="alpha"></span><br/>  
+beta（移动设备水平放置时，绕X轴旋转的角度，数值为-180度到180度）:<span id="beta"></span><br/>  
+gamma（移动设备水平放置时，绕Y轴旋转的角度，数值为-90度到90度）:<span id="gamma"></span><br/>  
+</body>  
+<script>  
+	//扩展API加载完毕后调用onPlusReady回调函数
+//	document.addEventListener("plusready",onPlusReady,false);
+	//扩展API加载完毕，现在可以正常调用扩展API
+//	function onPlusReady({
+//		plus.orientation.watchOrientation(function(o){
+//			var a = document.getElementById('alpha'),  
+//              b = document.getElementById('beta'),  
+//              g = document.getElementById('gamma'),  
+//              alpha = o.alpha,  
+//              beta  = o.beta,  
+//              gamma = o.gamma;  
+//          a.innerHTML = Math.round(alpha);  
+//          b.innerHTML = Math.round(beta);  
+//          g.innerHTML = Math.round(gamma);  
+//		})
+if (window.DeviceOrientationEvent) {  
+        window.addEventListener('deviceorientation', function (event) {  
+            var a = document.getElementById('alpha'),  
+                b = document.getElementById('beta'),  
+                g = document.getElementById('gamma'),  
+                alpha = event.alpha,  
+                beta = event.beta,  
+                gamma = event.gamma;  
+
+            a.innerHTML = Math.round(alpha);  
+            b.innerHTML = Math.round(beta);  
+            g.innerHTML = Math.round(gamma);  
+
+        }, false);  
+    } else {  
+        document.querySelector('body').innerHTML = '您的设备不支持陀螺仪';  
+    }  
+//	})
+	
+    
+</script>  
+</html>  

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<title>视频canvas</title>
+	<script src="js/jquery3.2.1.min.js"></script>
+	<script src="js/rem.js"></script>
+	<style>
+		*{
+			padding:0;
+			margin:0;
+			list-style: none;
+		}
+		body,html{
+			width:100%;
+			height:100%;
+			overflow: hidden;
+		}
+		video{
+			
+			display: none;
+		}
+		canvas{
+			width:100%;
+			height:100%;
+			position: absolute;
+			left:0rem;
+			top:0rem;
+			/*background: red;*/
+			
+		}
+		.box{
+			width: 100%;
+			height:100%;
+			position: absolute;
+			left:0rem;
+			top:0rem;
+		}
+		.box .top{
+			width:95%;
+			height:1rem;
+			background: #2daebf;
+			margin:0.4rem auto;
+			font-size: 0.26rem;
+			color:#fff;
+			text-align: center;
+			line-height: 1rem;
+		}
+		.box img{
+			width:0.5rem;
+			position:absolute;
+			top:0.7rem;
+			left:2.3rem;
+		}
+		.start{
+			width:3.05rem;
+			height:3.2rem;
+			background: #333;
+			position: absolute;
+			left:0;
+			right:0;
+			bottom:0;
+			top:0;
+			margin:auto;
+			z-index: 999;
+			box-shadow: 0 1px 3px 7rem #333;
+			opacity: 1;
+			transition: 2s;
+		}
+		
+		.start .icon{
+			width:100%;
+			height:2.5rem;
+			background-image: url('img/touch.png');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 100%;
+		}
+		
+		.start input{
+			width:100%;
+			height:1.1rem;
+			border: none;
+			border:0.03rem solid rgba(255,255,255,0.8);
+			border-radius: 0.1rem;
+			line-height: 1.1rem;
+			color: #2DCB70;
+			font-size: 0.34rem;
+			text-align: left;
+			padding-left: 0.3rem;
+			box-sizing: border-box;
+			text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+			background: rgba(0,0,0,0);
+			background-image: url("img/allow.png");
+			background-repeat: no-repeat;
+			background-position: 2.1rem;
+		}		
+		.iconBox{
+			width:100%;
+			height: 1.5rem;
+			position:absolute;
+			bottom:0;
+			left:0;
+		}
+		
+		.iconBox img{
+			position: absolute;
+			left:0;
+			right:0;
+			top:0;
+			bottom:0;
+			margin:auto;
+			z-index: 50;
+		}
+		.routeBox{
+			width:100%;
+			color: yellow;
+			font-size: 0.24rem;
+			position: absolute;
+			top:0.1rem;
+			left:0.1rem;
+			z-index: 50;
+		}
+		body, html{
+			width: 100%;
+			height: 100%;
+			margin:0;
+			font-family:"微软雅黑";
+		}
+		iframe{
+			height:0.1rem;
+			width:0.1rem;
+			position: absolute;
+			top:50%;
+			left:0;
+			overflow: hidden;
+			/*display: none;*/
+		}
+		.bottom{
+			width:65%;
+			height:1.5rem;
+
+			position:fixed;
+			left:0;
+			right:0;
+			margin:0 auto;
+			bottom:0.3rem;
+			background-image: url(img/six.png);
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
+		}
+		.bottom a{
+			width:0.6rem;
+			height:100%;
+			display: block;
+			position: absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+		}
+		.bottom img{
+			width:0.6rem;
+		}
+		
+	</style>
+</head>
+<body>	
+	
+	<!--<input type="file" accept="image/*" capture=camcorder>-->
+	<div class="start">
+		<div class="icon"></div>
+		<input type="button" title="开启导航" value="开启导航"/><br/> 
+	</div>
+    
+    <video autoplay="autoplay" width="6.4" height="4.8"></video>
+    <canvas></canvas>
+    <div class="box">
+    	<img src="img/pos.png/" alt="" /><div class="top">小店区学府街</div>
+    </div>
+	
+	<div class="bottom">
+		<a href="search.html" ><img src="img/search.png" alt="" /></a>
+	</div>
+    <!--<iframe src="map.html" frameborder="0" name="map"></iframe>-->
+    <iframe src="watch.html" frameborder="0" name="map" ></iframe>   
+
+    <!--<iframe src="map.html" frameborder="0" name="maps" width="640" height="480"></iframe>-->
+</body>
+</html>
+<script>
+    map.onload=function(){
+    	
+    var video = document.querySelector('video'); 
+    var canvas=document.querySelector("canvas");
+    var box=document.getElementsByClassName("box")[0];
+    var maps=document.querySelector("iframe");
+    var input=document.querySelector("input");
+    var start=document.getElementsByClassName("start")[0];
+    var a1 = 0;
+    var alpha,beta,gamma,distanceArr = [];
+    //路线数据
+    var iconObj={"s-1":"img/s-1.png","s-2":"img/s-2.png","s-3":"img/s-3.png","s-7":"img/s-7.png","s-8":"img/s-8.png"};
+    //获取手机陀螺仪数据
+  		if (window.DeviceOrientationEvent) {  
+	        window.addEventListener('deviceorientation', function (event) {
+	        	if(!a1){a1 = event.alpha}
+	            alpha = event.alpha,  
+	            beta = event.beta,  
+	            gamma = event.gamma;
+	        }, false);  
+    	} else {  
+        	document.querySelector('body').innerHTML = '您的设备不支持陀螺仪';  
+    	}      
+    input.onclick=function(){
+    	start.style.opacity=0;
+    	getMedia();
+    }
+    navigator.getUserMedia=navigator.getUserMedia||navigator.webkitGetUserMedia||navigator.mozGetUserMedia
+    ||navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;  
+        var exArray = []; //存储设备源ID  
+//      MediaStreamTrack.getConstraints(function (sourceInfos) {  
+//          for (var i = 0; i != sourceInfos.length; ++i) {  
+//              var sourceInfo = sourceInfos[i];  
+//              //这里会遍历audio,video，所以要加以区分  
+//              if (sourceInfo.kind === 'video') {  
+//                  exArray.push(sourceInfo.id);  
+//              }  
+//          }  
+//      });  
+        //获取视频
+        function getMedia() {
+           if (navigator.mediaDevices.getUserMedia) {  
+                navigator.getUserMedia({  
+                    'video': {  
+                        'optional': [{  
+                            'sourceId': exArray[1] //0为前置摄像头，1为后置  
+                        }]  
+                    },  
+                    'audio':true  
+                }, successFunc, errorFunc);    //success是获取成功的回调函数  
+            }  
+            else {  
+                alert('Native device media streaming (getUserMedia) not supported in this browser.');  
+            }  
+        }  
+        //获取成功
+        function successFunc(stream) {  
+
+            //alert('Succeed to get media!');  
+            if (video.mozSrcObject !== undefined) {  
+                //Firefox中，video.mozSrcObject最初为null，而不是未定义的，我们可以靠这个来检测Firefox的支持  
+                video.mozSrcObject = stream;  
+            }  
+            else {  
+                video.src = window.URL && window.URL.createObjectURL(stream) || stream; 
+                //画布画笔
+                var context = canvas.getContext("2d");
+                //将视频绘制在画布中
+
+                drawVideoAtCanvas(video,context);
+            }  
+//          //video.play();  
+//          // 音频  
+//          audio = new Audio();  
+//          audioType = getAudioType(audio);  
+//          if (audioType) {  
+//              audio.src = 'polaroid.' + audioType;  
+//              audio.play();  
+//          }  
+        }  
+        //视频获取失败
+        function errorFunc(e) {  
+            alert('Error1234567！'+e);  
+        }  
+        // 将视频帧绘制到Canvas对象上,每当当前位置发生变化时切换帧，形成肉眼视频效果  	
+        function drawVideoAtCanvas(video,context) { 
+
+        	
+
+        	window.setInterval(function () {  
+
+            	context.save();
+            	context.clearRect(0,0,canvas.width,canvas.height);
+                context.drawImage(video, 0, 0, 640, 480); 
+                //计算两点的经纬度差值
+                var posArr=window.posArr;
+                var nowPos=window.nowPos;
+                var currentAng = [];
+                for(let i=0;i<posArr.length;i++){
+                	for(let j=0;j<posArr[i].getCurrentNumPois();j++){
+                		var points = posArr[i].getPoi(j).point;
+                		var lngPos = points.lng-nowPos.lng;
+                		var latPos = points.lat-nowPos.lat;
+                		var tanPos = Math.atan(lngPos/latPos) * 180 / Math.PI;
+                        currentAng.push(tanPos);
+                	}
+                }
+                //绘制圆角矩形
+            for(let i=0;i<posArr.length;i++){
+            	
+            	if(Math.abs( currentAng[i] + alpha - a1 )<=45){	  
+            		context.save();
+	            	context.translate(i*20,i*30+20);
+		            context.beginPath();
+		            context.lineJoin = "round";  
+		            context.lineWidth = "1";
+		            context.strokeStyle = "#fff";
+		            context.fillStyle = "#54b5f4";
+		            context.moveTo(100, 100);
+		            context.lineTo(100, 130);
+		            context.lineTo(300, 130);
+		            context.lineTo(300, 100);
+		            context.closePath();
+		            context.fill();
+		            context.stroke();
+		            context.font = "12px";
+		            context.strokeText(posArr[i].getPoi(i).title, 120, 120);
+		            context.strokeStyle = "#000";
+		            context.stroke();
+		            context.restore();
+            	}
+            }
+	            context.restore(); 
+	            
+	            //路线和路线图片部分
+	            var tdBox=window.conText.getElementsByTagName("td");
+	            var tdArr=Array.from(tdBox);
+	            
+                    function route(){
+                     	box.innerHTML="";
+                     	var ele=tdArr.pop();
+                     	var routeBox=`<div class="routeBox">
+                     	  ${ele.childNodes[1].innerText}
+                     	</div>
+                     	<div class="iconBox"><img src=${iconObj[ele.childNodes[0].classList[1]]} width='160' height='150'></div>
+                     	`;
+                     	box.innerHTML=routeBox;
+                     	//判断终点，导航结束
+						var str=box.innerText;
+						console.log(str.search("终点"));
+						
+//                   	if(str.indexOf("终点")!=-1){
+//                   		console.log("end");
+//                   		clearInterval(t);
+//                   		return;
+//                   	}
+						
+                    }
+                    var t=window.setInterval(route,3000);
+//         			route();
+	            }, 3000);  
+        }  
+    
+      
+  	}
+		
+</script>

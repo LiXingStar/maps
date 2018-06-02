@@ -1,0 +1,97 @@
+<!doctype html>  
+<html style="margin:0px;padding:0px;" lang="en">  
+    <head>  
+        <title>three.js</title>  
+        <meta charset="utf-8">  
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">  
+    </head>  
+    <body style="margin:0px;padding:0px;">  
+  
+        <div id="container" ></div>  
+        
+        <script src="http://www.natural-science.or.jp/javascript/Three/Three.js"></script>  
+  
+        <script>  
+        	
+            (function(){  
+                var container;  
+                var camera, scene, renderer;  
+                var mesh;  
+  
+                (function(){  
+                    var w=700,h=700;  
+                    container = document.getElementById( 'container' );  
+                    scene = new THREE.Scene();  
+                    camera = new THREE.PerspectiveCamera( 60, w / h, 1, 10000 );  
+                    camera.position.z = 200;  
+                    //renderer = new THREE.CanvasRenderer();  
+                    renderer = new THREE.WebGLRenderer({antialias: true});  
+                    renderer.setSize( w, h );  
+                    container.appendChild( renderer.domElement );  
+                })();  
+                  
+                  
+                  
+                  
+                //球形  
+                (function initPlane(){  
+                    //var texture1  = new THREE.ImageUtils.loadTexture('textures/land_ocean_ice_cloud_2048.jpg');  
+                    mesh = new THREE.Mesh(  
+                        new THREE.SphereGeometry(20,20,20),  
+                        new THREE.MeshLambertMaterial({color: 0xff0000})  
+                        
+                    );  
+                    scene.add(mesh);  
+                })();  
+                  
+                var moon;  
+                //月球  
+                (function initMoon(){  
+                    //var texture1  = new THREE.ImageUtils.loadTexture('textures/moon_1024.jpg');  
+                    moon = new THREE.Mesh(  
+                        new THREE.SphereGeometry(10,20,20),  
+                        new THREE.MeshLambertMaterial({color: 0xff0000})  
+                    );  
+                    moon.position.set(-50,0,0);  
+                    scene.add(moon);  
+                })();  
+                  
+                //方盒  
+                (function initCube(){  
+                    var plane = new THREE.Mesh(new THREE.CubeGeometry(30, 30, 30), new THREE.MeshLambertMaterial({  
+                        color: 0xff0000  
+                    }));  
+                    plane.position.x = 50;  
+                    plane.position.z = 0;  
+                    scene.add(plane);  
+                })();  
+                  
+                  
+                //灯光  
+                (function initLight(){  
+                    var light = new THREE.DirectionalLight(0xFFFFFF, 1.0, 0);  
+                    light.position.set( -100, 0, 500 );  
+                    scene.add(light);  
+                })();  
+                  
+                //动画效果  
+                function animate() {  
+                    requestAnimationFrame( animate );  
+                    render();  
+                }  
+                //渲染器
+                function render() {
+                
+                    renderer.clear();  
+                    /* mesh.rotation.y -= 0.001;  
+                    moon.position.set( 70*Math.sin(t/200) , 0 ,70*Math.cos(t/200)); */  
+                    renderer.render( scene, camera );
+                    
+                }  
+                animate();  
+            })();  
+  
+        </script>  
+  
+    </body>  
+</html>  

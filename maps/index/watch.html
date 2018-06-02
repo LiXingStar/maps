@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    	<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<style type="text/css">
+        body, html, #allmap {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #l-map {
+            height: 300px;
+            width: 100%;
+        }
+
+        #r-result {
+            width: 100%;
+            font-size: 14px;
+            line-height: 20px;
+        }
+    	</style>
+    </head>
+<body>
+	<div id="l-map"></div>
+	<div id="r-result"></div>
+</body>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=wEwOE1p1eXOiagi88LenfO2GBA7491tN"></script>
+<script>
+var id, target, options;
+
+function success(pos) {
+var crd = pos.coords;
+var lat = crd.latitude;
+var lon = crd.longitude;
+var map = new BMap.Map("l-map");            // 创建Map实例
+	var  pointA = new BMap.Point(lon, lat); 
+	var mk = new BMap.Marker(pos.coords);
+    map.addOverlay(mk);
+    map.panTo(pos.coords);
+//	map.enableScrollWheelZoom();
+	map.centerAndZoom(pointA,15);
+
+	var options = {
+                onSearchComplete: function (results) {
+                    if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+                        var s = [];
+                        //遍历得到的数据
+                        for (var i = 0; i < results.length; i++) {
+                            for (var j = 0; j < results[i].getCurrentNumPois(); j++) {
+                                var point = results[i].getPoi(j).point;
+                                //目标地址的经纬度
+                                var pointB = new BMap.Point(point.lng,point.lat);
+                                //两点之间的距离
+                                var distance = map.getDistance(pointA,pointB).toFixed(2);
+                                s.push(results[i].getPoi(j).title+'---'+ distance +'m');
+								//显示在页面中
+                                document.getElementById("r-result").innerHTML = s.join("<br/>");
+                             	window.parent.posArr=results;
+                             	window.parent.nowPos=pointA; 
+                             	// window.parent.distanceArr.push(distance);
+                            }
+
+                        }
+
+                    }
+                }
+            };
+            ///////////////////////////////////////////////////////////
+            var local = new BMap.LocalSearch(map, options);
+            local.searchNearby(["小吃", "商场", "酒店", "公园"], pointA, 500);
+//          var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
+//			walking.search("天坛公园", "故宫");
+//if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+//  console.log('Congratulations, you reached the target');
+//  navigator.geolocation.clearWatch(id);
+//}
+}
+
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+}
+
+target = {
+  latitude : 0,
+  longitude: 0
+};
+
+options = {
+  enableHighAccuracy: false,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+id = navigator.geolocation.watchPosition(success, error, options);
+
+	
+</script>
+
+</html>
